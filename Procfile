@@ -1,0 +1,1 @@
+worker: python knifeswap-raffle-bot.py
