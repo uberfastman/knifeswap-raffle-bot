@@ -35,7 +35,7 @@ while True:
         subreddit = reddit_object.get_subreddit("knife_swap")
 
         # for submission in subreddit.get_new(limit=10):
-        for submission in subreddit.get_new(limit=1):
+        for submission in subreddit.get_new(limit=25):
 
             submission_commentor = submission.author
 
@@ -90,4 +90,4 @@ while True:
         break
 
     # sleeps for 15 minutes before repeating the loop
-    time.sleep(60)
+    time.sleep(900)
