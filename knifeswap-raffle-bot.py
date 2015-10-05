@@ -32,8 +32,6 @@ while True:
 
     try:
 
-        current_time = datetime.datetime.now()
-
         subreddit = reddit_object.get_subreddit("knife_swap")
 
         # for submission in subreddit.get_new(limit=10):
@@ -83,6 +81,7 @@ while True:
                         already_parsed_comments.add(comment.id)
 
         # count += 1
+        current_time = datetime.datetime.now()
         print "The loop parsing new posts in /r/knife_swap last executed on: " + str(current_time)
 
     except Exception as e:
