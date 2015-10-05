@@ -32,7 +32,7 @@ while True:
 
     try:
 
-        current_time = datetime.date.today()
+        current_time = datetime.datetime.now()
 
         subreddit = reddit_object.get_subreddit("knife_swap")
 
@@ -91,4 +91,4 @@ while True:
         break
 
     # sleeps for 15 minutes before repeating the loop
-    time.sleep(900)
+    time.sleep(60)
