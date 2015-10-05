@@ -37,7 +37,7 @@ while True:
         subreddit = reddit_object.get_subreddit("knife_swap")
 
         # for submission in subreddit.get_new(limit=10):
-        for submission in subreddit.get_new(limit=50):
+        for submission in subreddit.get_new(limit=1):
 
             submission_commentor = submission.author
 
