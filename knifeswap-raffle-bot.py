@@ -4,6 +4,7 @@ import time
 import praw
 import random
 import os
+import datetime
 
 reddit_object = praw.Reddit(user_agent="knifeswap_raffle_bot 1.0 by /u/uberfastman")
 reddit_object.login(os.environ["REDDIT_USER"], os.environ["REDDIT_PASS"])
@@ -30,6 +31,8 @@ already_parsed_comments = set()
 while True:
 
     try:
+
+        current_time = datetime.date.today()
 
         subreddit = reddit_object.get_subreddit("knife_swap")
 
@@ -80,6 +83,7 @@ while True:
                         already_parsed_comments.add(comment.id)
 
         # count += 1
+        print "The loop parsing new posts in /r/knife_swap last executed on: " + str(current_time)
 
     except Exception as e:
         private_message = "Your bot /u/KNIFESWAP_RAFFLE_B0T encountered the following error: %s. Please log on to Heroku and debug it." % e
