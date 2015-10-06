@@ -90,13 +90,15 @@ while True:
 
                     # warns comment poster that they cannot call for a raffle drawing if they are not the original submission poster
                     else:
-                        comment_msg = "You are ***NOT*** the submitter of this raffle. You do ***NOT*** have permission to do the raffle drawing.\n\n\n&nbsp;\n\n\n[^Contact ^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^| [^Source ^Code](https://github.com/uberfastman/knifeswap-raffle-bot)"
 
-                        logging.info("Raffle drawing call was made by incorrect user for comment %s" % str(comment.permalink))
+                        if comment.author != "KNIFESWAP_RAFFLE_BOT":
+                            comment_msg = "You are ***NOT*** the submitter of this raffle. You do ***NOT*** have permission to do the raffle drawing.\n\n\n&nbsp;\n\n\n[^Contact ^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^| [^Source ^Code](https://github.com/uberfastman/knifeswap-raffle-bot)"
 
-                        comment.reply(comment_msg)
-                        saved_parsed_comments.write(comment.id)
-                        already_parsed_comments.append(comment.id)
+                            logging.info("Raffle drawing call was made by incorrect user for comment %s" % str(comment.permalink))
+
+                            comment.reply(comment_msg)
+                            saved_parsed_comments.write(comment.id)
+                            already_parsed_comments.append(comment.id)
 
         current_time = datetime.datetime.now() - datetime.timedelta(hours=4)
         logging.info("The loop parsing new posts in /r/knife_swap last executed at %s and took %s to run" % (str(current_time), str(current_time - start_time)))
