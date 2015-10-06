@@ -13,6 +13,7 @@ r.login(os.environ["REDDIT_USER"], os.environ["REDDIT_PASS"])
 logging.basicConfig(filename="raffle_bot_log.txt", level=logging.INFO)
 
 saved_parsed_comments = open("saved_parsed_comments.txt", "a")
+already_parsed_comments = [line.strip for line in open("saved_parsed_comments.txt", "r")]
 
 
 def parse_to_integer(string):
@@ -27,9 +28,6 @@ def parse_to_integer(string):
         pass
 
     return num_slots
-
-
-already_parsed_comments = [line.strip for line in open("saved_parsed_comment.txt", "r")]
 
 while True:
 
