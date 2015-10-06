@@ -5,7 +5,6 @@ import praw
 import random
 import os
 from datetime import datetime
-import pytz
 
 reddit_object = praw.Reddit(user_agent="knifeswap_raffle_automator 1.0 by /u/uberfastman")
 reddit_object.login(os.environ["REDDIT_USER"], os.environ["REDDIT_PASS"])
