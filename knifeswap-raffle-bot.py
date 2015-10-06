@@ -33,7 +33,7 @@ while True:
         subreddit = reddit_object.get_subreddit("knife_swap")
 
         # limit: controls number of new comments retrieved
-        for submission in subreddit.get_new(limit=10):
+        for submission in subreddit.get_new(limit=25):
 
             # sets the original poster of the submission
             submission_commentor = submission.author
