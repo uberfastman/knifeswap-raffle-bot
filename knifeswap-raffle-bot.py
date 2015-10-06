@@ -86,7 +86,7 @@ while True:
                         comment.reply(comment_msg)
                         already_parsed_comments.add(comment.id)
 
-        current_time = datetime.datetime.now()
+        current_time = datetime.datetime.now(utc)
         print "The loop parsing new posts in /r/knife_swap last executed on: " + str(current_time)
 
     # catches any attribute errors and sends /u/uberfastman a private message with the error
