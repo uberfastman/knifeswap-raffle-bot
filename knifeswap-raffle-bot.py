@@ -4,9 +4,10 @@ import time
 import praw
 import random
 import os
-import datetime
+from datetime import datetime
+import pytz
 
-reddit_object = praw.Reddit(user_agent="knifeswap_raffle_bot 1.0 by /u/uberfastman")
+reddit_object = praw.Reddit(user_agent="knifeswap_raffle_automator 1.0 by /u/uberfastman")
 reddit_object.login(os.environ["REDDIT_USER"], os.environ["REDDIT_PASS"])
 
 
@@ -86,7 +87,7 @@ while True:
                         comment.reply(comment_msg)
                         already_parsed_comments.add(comment.id)
 
-        current_time = datetime.datetime.now(utc)
+        current_time = datetime.now()
         print "The loop parsing new posts in /r/knife_swap last executed on: " + str(current_time)
 
     # catches any attribute errors and sends /u/uberfastman a private message with the error
