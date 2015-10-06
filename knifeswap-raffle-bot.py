@@ -120,4 +120,4 @@ while True:
         pass
 
     # sleeps for 15 minutes before repeating the loop
-    time.sleep(900)
+    time.sleep(60)
