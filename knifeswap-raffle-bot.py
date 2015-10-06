@@ -32,11 +32,12 @@ def parse_to_integer(string):
 while True:
 
     try:
+        start_time = datetime.datetime.now() - datetime.timedelta(hours=4)
 
         subreddit = r.get_subreddit("knife_swap")
 
         # limit: controls number of new comments retrieved
-        for submission in subreddit.get_new(limit=25):
+        for submission in subreddit.get_new(limit=10):
 
             # sets the original poster of the submission
             submission_commentor = submission.author
@@ -98,8 +99,8 @@ while True:
                         already_parsed_comments.append(comment.id)
 
         current_time = datetime.datetime.now() - datetime.timedelta(hours=4)
-        logging.info("The loop parsing new posts in /r/knife_swap last executed on: " + str(current_time))
-        print "The loop parsing new posts in /r/knife_swap last executed on: " + str(current_time)
+        logging.info("The loop parsing new posts in /r/knife_swap last executed at %s and took %s to run" % (str(current_time), str(current_time - start_time)))
+        print "The loop parsing new posts in /r/knife_swap last executed at %s and took %s to run" % (str(current_time), str(current_time - start_time))
 
     # catches any attribute errors and sends /u/uberfastman a private message with the error
     except AttributeError as e:
