@@ -72,17 +72,17 @@ while True:
 
                             winner = random.randint(0, total_slots)
 
-                            comment_msg = "Thank you for hosting a raffle on /r/Knife_Swap with %d slots.\n\nThe winner of the raffle is the redditor who chose raffle slot number %d!\n\n\n&nbsp;\n\n\n^(If you have any questions about the working of this bot, please send a private message to its creator, /u/uberfastman.)" % (total_slots, winner)
+                            comment_msg = "Thank you for hosting a raffle on /r/Knife_Swap with %d slots.\n\nThe winner of the raffle is the redditor who chose raffle slot number %d!\n\n\n&nbsp;\n\n\n[^Contact ^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^| [^Source ^Code](https://github.com/uberfastman/knifeswap-raffle-bot)" % (total_slots, winner)
 
                         else:
-                            comment_msg = "No number of slots for the raffle was specified. Please try again.\n\n\n&nbsp;\n\n\n^(If you have any questions about the working of this bot, please send a private message to its creator, /u/uberfastman.)"
+                            comment_msg = "No number of slots for the raffle was specified. Please try again.\n\n\n&nbsp;\n\n\n[^Contact ^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^| [^Source ^Code](https://github.com/uberfastman/knifeswap-raffle-bot)"
 
                         comment.reply(comment_msg)
                         already_parsed_comments.add(comment.id)
 
                     # warns comment poster that they cannot call for a raffle drawing if they are not the original submission poster
                     else:
-                        comment_msg = "You are ***NOT*** the submitter of this raffle. You do ***NOT*** have permission to do the raffle drawing.\n\n\n&nbsp;\n\n\n^(If you have any questions about the working of this bot, please send a private message to its creator, /u/uberfastman.)"
+                        comment_msg = "You are ***NOT*** the submitter of this raffle. You do ***NOT*** have permission to do the raffle drawing.\n\n\n&nbsp;\n\n\n[^Contact ^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^| [^Source ^Code](https://github.com/uberfastman/knifeswap-raffle-bot)"
                         comment.reply(comment_msg)
                         already_parsed_comments.add(comment.id)
 
