@@ -50,7 +50,7 @@ while True:
             for comment in flat_comments:
 
                 # checks if to make sure comment has not been parsed already and that it contains the words 'knifeswap' and 'raffle'
-                if comment.id not in already_parsed_comments and "knifeswap" in comment.body.lower() and "raffle" in comment.body.lower() and comment.author != "KNIFESWAP_RAFFLE_BOT":
+                if comment.id not in already_parsed_comments and "knifeswap" in comment.body.lower() and "raffle" in comment.body.lower() and comment.author != "KNIFESWAP_RAFFLE_BOT" and "knifeswap_raffle_bot" not in comment.body.lower():
 
                     # checks to make sure the poster of the comment calling for a raffle drawing was made by the submission poster
                     if submission_commentor == comment.author:
