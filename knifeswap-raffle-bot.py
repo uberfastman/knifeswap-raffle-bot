@@ -137,16 +137,20 @@ while True:
         print "ERROR: %s (line %s)" % (e, sys.exc_info()[-1].tb_lineno)
         pass
 
-    time_check = datetime.datetime.now() - datetime.timedelta(hours=4)
-    midnight = time_check.replace(hour=0, minute=0, second=0, microsecond=0)
-    time_diff = time_check - midnight
-    sec_diff = time_diff.seconds
+    # time_check = datetime.datetime.now() - datetime.timedelta(hours=4)
+    # midnight = time_check.replace(hour=0, minute=0, second=0, microsecond=0)
+    # time_diff = time_check - midnight
+    # sec_diff = time_diff.seconds
 
-    if 27900 < sec_diff < 85500:
+    # if 27900 < sec_diff < 85500:
         # logging.info("Starting daytime sleep at %s for 15 minutes." % str(time_check.time()))
-        print "Starting daytime sleep at %s for 15 minutes." % str(time_check.time())
+        # print "Starting daytime sleep at %s for 15 minutes." % str(time_check.time())
         # time.sleep(900)
-    else:
+    # else:
         # logging.info("Starting nighttime sleep at %s and will awaken again in 8 hours." % str(time_check.time()))
-        print "Starting nighttime sleep at %s and will awaken again in 8 hours." % str(time_check.time())
+        # print "Starting nighttime sleep at %s and will awaken again in 8 hours." % str(time_check.time())
         # time.sleep(28800)
+
+    # sleep for 10 minutes between runs
+    print "Starting 10 minute sleep before next run."
+    time.sleep(600)
