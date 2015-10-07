@@ -41,7 +41,7 @@ while True:
         start_time = datetime.datetime.now() - datetime.timedelta(hours=4)
 
         # limit: controls number of new comments retrieved
-        for submission in subreddit.get_new(limit=1):
+        for submission in subreddit.get_new(limit=50):
 
             # sets the original poster of the submission
             submission_author = str(submission.author)
@@ -140,7 +140,7 @@ while True:
         pass
 
     # sleeps for 15 minutes before repeating the loop
-    time_check = datetime.datetime.now() - datetime.timedelta(hours=0)
+    time_check = datetime.datetime.now() - datetime.timedelta(hours=4)
     midnight = time_check.replace(hour=0, minute=0, second=0, microsecond=0)
     time_diff = time_check - midnight
     sec_diff = time_diff.seconds
