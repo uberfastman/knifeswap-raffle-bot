@@ -95,11 +95,11 @@ while True:
 
                                 winner = random.randint(0, total_slots)
 
-                                comment_msg = "Thank you for hosting a raffle on /r/%s with %d slots.\n\nThe winner of the raffle is the redditor who chose raffle slot number %d!\n\n\n&nbsp;\n\n\n[^Contact ^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^| [^Source ^Code](https://github.com/uberfastman/knifeswap-raffle-bot)" % (str(subreddit), total_slots, winner)
+                                comment_msg = "Thank you for hosting a raffle on /r/%s with %d slots.\n\nThe winner of the raffle is the redditor who chose raffle slot number %d!\n\n\n&nbsp;\n\n\n[^^Contact ^^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^^| [^^Source ^^Code](https://github.com/uberfastman/knifeswap-raffle-bot)" % (str(subreddit), total_slots, winner)
                                 logging.info("Raffle was drawn for comment at %s" % comment_link)
 
                             else:
-                                comment_msg = "No number of slots for the raffle was specified. Please try again.\n\n\n&nbsp;\n\n\n[^Contact ^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^| [^Source ^Code](https://github.com/uberfastman/knifeswap-raffle-bot)"
+                                comment_msg = "No number of slots for the raffle was specified. Please try again.\n\n\n&nbsp;\n\n\n[^^Contact ^^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^^| [^^Source ^^Code](https://github.com/uberfastman/knifeswap-raffle-bot)"
 
                                 logging.info("Raffle was attempted but needed slot number for comment at %s" % comment_link)
 
@@ -109,7 +109,7 @@ while True:
                         else:
 
                             if comment_author != "KNIFESWAP_RAFFLE_BOT":
-                                comment_msg = "You are ***NOT*** the submitter of this raffle. You do ***NOT*** have permission to do the raffle drawing.\n\n\n&nbsp;\n\n\n[^Contact ^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^| [^Source ^Code](https://github.com/uberfastman/knifeswap-raffle-bot)"
+                                comment_msg = "You are ***NOT*** the submitter of this raffle. You do ***NOT*** have permission to do the raffle drawing.\n\n\n&nbsp;\n\n\n[^^Contact ^^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^^| [^^Source ^^Code](https://github.com/uberfastman/knifeswap-raffle-bot)"
 
                                 logging.info("Raffle drawing call was made by incorrect user for comment %s" % comment_link)
 
@@ -140,4 +140,14 @@ while True:
         pass
 
     # sleeps for 15 minutes before repeating the loop
-    time.sleep(10)
+    time_check = datetime.datetime.now() - datetime.timedelta(hours=0)
+    midnight = time_check.replace(hour=0, minute=0, second=0, microsecond=0)
+    time_diff = time_check - midnight
+    sec_diff = time_diff.seconds
+
+    if 27900 < sec_diff < 85500:
+        print "Starting daytime sleep at %s for 15 minutes." % str(time_check.time())
+        # time.sleep(900)
+    else:
+        print "Starting nighttime sleep at %s and will awaken again in 8 hours." % str(time_check.time())
+        # time.sleep(28800)
