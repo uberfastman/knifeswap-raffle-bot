@@ -95,7 +95,7 @@ while True:
 
                                 winner = random.randint(0, total_slots)
 
-                                comment_msg = "Thank you for hosting a raffle on /r/Knife_Swap with %d slots.\n\nThe winner of the raffle is the redditor who chose raffle slot number %d!\n\n\n&nbsp;\n\n\n[^Contact ^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^| [^Source ^Code](https://github.com/uberfastman/knifeswap-raffle-bot)" % (total_slots, winner)
+                                comment_msg = "Thank you for hosting a raffle on /r/%s with %d slots.\n\nThe winner of the raffle is the redditor who chose raffle slot number %d!\n\n\n&nbsp;\n\n\n[^Contact ^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^| [^Source ^Code](https://github.com/uberfastman/knifeswap-raffle-bot)" % (str(subreddit), total_slots, winner)
                                 logging.info("Raffle was drawn for comment at %s" % comment_link)
 
                             else:
@@ -121,8 +121,8 @@ while True:
                     already_parsed_comments.append(comment_id)
 
         current_time = datetime.datetime.now() - datetime.timedelta(hours=4)
-        logging.info("The loop parsing new posts in /r/knife_swap last executed at %s and took %s to run" % (str(current_time), str(current_time - start_time)))
-        print "The loop parsing new posts in /r/knife_swap last executed at %s and took %s to run" % (str(current_time), str(current_time - start_time))
+        logging.info("The loop parsing new posts in /r/%s last executed at %s and took %s to run" % (str(subreddit), str(current_time), str(current_time - start_time)))
+        print "The loop parsing new posts in /r/%s last executed at %s and took %s to run" % (str(subreddit), str(current_time), str(current_time - start_time))
 
     # catches any attribute errors and sends /u/uberfastman a private message with the error
     except AttributeError as e:
