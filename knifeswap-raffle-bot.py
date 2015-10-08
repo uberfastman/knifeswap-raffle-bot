@@ -13,8 +13,8 @@ print "STARTING KNIFESWAP-RAFFLE-BOT..."
 r = praw.Reddit(user_agent="knifeswap_raffle_automator 1.0 by /u/uberfastman")
 r.login(os.environ["REDDIT_USER"], os.environ["REDDIT_PASS"])
 
-# subreddit = r.get_subreddit("knife_swap")
-subreddit = r.get_subreddit("bot_testing_ground")
+subreddit = r.get_subreddit("knife_swap")
+# subreddit = r.get_subreddit("bot_testing_ground")
 
 python_mod_list = [str(mod) for mod in r.get_moderators(subreddit)]
 
@@ -177,4 +177,4 @@ while True:
 
     # sleep for 10 minutes between runs
     print "Starting 10 minute sleep before next run."
-    time.sleep(30)
+    time.sleep(600)
