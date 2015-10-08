@@ -8,6 +8,8 @@ import datetime
 import logging
 import sys
 
+print "STARTING KNIFESWAP-RAFFLE-BOT..."
+
 r = praw.Reddit(user_agent="knifeswap_raffle_automator 1.0 by /u/uberfastman")
 r.login(os.environ["REDDIT_USER"], os.environ["REDDIT_PASS"])
 
@@ -40,6 +42,8 @@ while True:
 
     try:
         start_time = datetime.datetime.now() - datetime.timedelta(hours=4)
+
+        print "Started loop to parse new posts in /r/%s at %s" % (subreddit, str(start_time))
 
         # limit: controls number of new comments retrieved
         for submission in subreddit.get_new(limit=50):
@@ -173,4 +177,4 @@ while True:
 
     # sleep for 10 minutes between runs
     print "Starting 10 minute sleep before next run."
-    time.sleep(0)
+    time.sleep(30)
