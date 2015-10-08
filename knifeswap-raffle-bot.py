@@ -11,8 +11,8 @@ import sys
 r = praw.Reddit(user_agent="knifeswap_raffle_automator 1.0 by /u/uberfastman")
 r.login(os.environ["REDDIT_USER"], os.environ["REDDIT_PASS"])
 
-subreddit = r.get_subreddit("knife_swap")
-# subreddit = r.get_subreddit("bot_testing_ground")
+# subreddit = r.get_subreddit("knife_swap")
+subreddit = r.get_subreddit("bot_testing_ground")
 
 python_mod_list = [str(mod) for mod in r.get_moderators(subreddit)]
 
@@ -44,6 +44,9 @@ while True:
         # limit: controls number of new comments retrieved
         for submission in subreddit.get_new(limit=50):
 
+            # sets the submission id
+            submission_id = str(submission.id)
+
             # sets the original poster of the submission
             submission_author = str(submission.author)
 
@@ -52,6 +55,21 @@ while True:
 
             # flattens the comments for easy parsing
             flat_comments = praw.helpers.flatten_tree(submission.comments)
+
+            comment_author_parent_tuple = []
+            for comment in flat_comments:
+
+                temp_author = str(comment.author)
+                comment_parent_id = str(comment.parent_id).split("_")[1]
+
+                temp_pair = [temp_author, comment_parent_id]
+
+                comment_author_parent_tuple.append(temp_pair)
+
+            already_replied_list = []
+            for pair in comment_author_parent_tuple:
+                if pair[0] == "KNIFESWAP_RAFFLE_BOT":
+                    already_replied_list.append(pair[1])
 
             for comment in flat_comments:
 
@@ -68,7 +86,7 @@ while True:
                     krb_is_not_author = False
 
                 # checks if to make sure comment has not been parsed already
-                if comment_id not in already_parsed_comments:
+                if comment_id not in already_parsed_comments and comment_id not in already_replied_list:
 
                     # checks /u/KNIFE_RAFFLE_BOT is not comment author and comment contains 'knifeswap', 'raffle', and 'slots'
                     if krb_is_not_author and "knifeswap" in comment_body and "raffle" in comment_body and "slots" in comment_body:
@@ -122,6 +140,8 @@ while True:
                     #     parse_history.write(comment_id + "\n")
 
                     already_parsed_comments.append(comment_id)
+            if already_replied_list:
+                print "/u/KNIFESWAP_RAFFLE_BOT already commented on comments with IDs %s in submission with ID '%s'." % (str(already_replied_list), submission_id)
 
         current_time = datetime.datetime.now() - datetime.timedelta(hours=4)
 
@@ -153,4 +173,4 @@ while True:
 
     # sleep for 10 minutes between runs
     print "Starting 10 minute sleep before next run."
-    time.sleep(600)
+    time.sleep(0)

@@ -3,3 +3,4 @@ env/
 *.pyc
 .idea/
 time_test.py
+praw_test.py
