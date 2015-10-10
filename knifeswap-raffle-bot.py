@@ -5,7 +5,6 @@ import praw
 import random
 import os
 import datetime
-import logging
 import sys
 
 print "STARTING KNIFESWAP-RAFFLE-BOT..."
@@ -18,12 +17,7 @@ subreddit = r.get_subreddit("knife_swap")
 
 python_mod_list = [str(mod) for mod in r.get_moderators(subreddit)]
 
-# logging.basicConfig(filename="raffle_bot_log.txt", level=logging.INFO)
-
 already_parsed_comments = []
-# with open("saved_parsed_comments.txt", "r") as parse_history:
-#     already_parsed_comments = parse_history.read().splitlines()
-
 
 def parse_to_integer(string):
 
@@ -40,6 +34,8 @@ def parse_to_integer(string):
 
 while True:
 
+    exception_list = []
+
     try:
         start_time = datetime.datetime.now() - datetime.timedelta(hours=4)
 
@@ -48,118 +44,141 @@ while True:
         # limit: controls number of new comments retrieved
         for submission in subreddit.get_new(limit=50):
 
-            # sets the submission id
-            submission_id = str(submission.id)
+            # sets the submission permalink
+            submission_link = str(submission.permalink)
 
-            # sets the original poster of the submission
-            submission_author = str(submission.author)
+            try:
 
-            # limit: take no more than this # of requests; threshold: requests must result in this many additional comments
-            submission.replace_more_comments(limit=None, threshold=1)
+                # sets the submission id
+                submission_id = str(submission.id)
 
-            # flattens the comments for easy parsing
-            flat_comments = praw.helpers.flatten_tree(submission.comments)
+                # sets the original poster of the submission
+                submission_author = str(submission.author)
 
-            comment_author_parent_tuple = []
-            for comment in flat_comments:
+                # limit: take no more than this # of requests; threshold: requests must result in this many additional comments
+                submission.replace_more_comments(limit=None, threshold=1)
 
-                temp_author = str(comment.author)
-                comment_parent_id = str(comment.parent_id).split("_")[1]
+                # flattens the comments for easy parsing
+                flat_comments = praw.helpers.flatten_tree(submission.comments)
 
-                temp_pair = [temp_author, comment_parent_id]
+                comment_author_parent_tuple = []
+                for comment in flat_comments:
 
-                comment_author_parent_tuple.append(temp_pair)
+                    temp_author = str(comment.author)
+                    comment_parent_id = str(comment.parent_id).split("_")[1]
 
-            already_replied_list = []
-            for pair in comment_author_parent_tuple:
-                if pair[0] == "KNIFESWAP_RAFFLE_BOT":
-                    already_replied_list.append(pair[1])
+                    temp_pair = [temp_author, comment_parent_id]
 
-            for comment in flat_comments:
+                    comment_author_parent_tuple.append(temp_pair)
 
-                comment_author = str(comment.author)
+                already_replied_list = []
+                for pair in comment_author_parent_tuple:
+                    if pair[0] == "KNIFESWAP_RAFFLE_BOT":
+                        already_replied_list.append(pair[1])
 
-                comment_id = str(comment.id).strip()
+                for comment in flat_comments:
 
-                comment_link = str(comment.permalink)
+                    comment_link = str(comment.permalink)
 
-                comment_body = comment.body.lower()
+                    try:
 
-                krb_is_not_author = True
-                if comment_author == "KNIFESWAP_RAFFLE_BOT":
-                    krb_is_not_author = False
+                        comment_author = str(comment.author)
 
-                # checks if to make sure comment has not been parsed already
-                if comment_id not in already_parsed_comments and comment_id not in already_replied_list:
+                        comment_id = str(comment.id).strip()
 
-                    # checks /u/KNIFE_RAFFLE_BOT is not comment author and comment contains 'knifeswap', 'raffle', and 'slots'
-                    if krb_is_not_author and "knifeswap" in comment_body and "raffle" in comment_body and "slots" in comment_body:
+                        comment_body = comment.body.lower()
 
-                        # checks that raffle caller is either OP or a mod of /r/Knife_Swap
-                        if submission_author == comment_author or comment_author in python_mod_list:
+                        krb_is_not_author = True
+                        if comment_author == "KNIFESWAP_RAFFLE_BOT":
+                            krb_is_not_author = False
 
-                            comment_word_list = comment.body.split(" ")
+                        # checks if to make sure comment has not been parsed already
+                        if comment_id not in already_parsed_comments and comment_id not in already_replied_list:
 
-                            total_slots = 0
+                            # checks /u/KNIFE_RAFFLE_BOT is not comment author and comment contains 'knifeswap', 'raffle', and 'slots'
+                            if krb_is_not_author and "knifeswap" in comment_body and "raffle" in comment_body and "slots" in comment_body:
 
-                            for word in comment_word_list:
+                                # checks that raffle caller is either OP or a mod of /r/Knife_Swap
+                                if submission_author == comment_author or comment_author in python_mod_list:
 
-                                # parses any number strings in the comment to integers
-                                slots = parse_to_integer(word)
+                                    comment_word_list = comment.body.split(" ")
 
-                                if slots != 0 and total_slots == 0:
-                                    total_slots = slots
+                                    total_slots = 0
 
+                                    for word in comment_word_list:
+
+                                        # parses any number strings in the comment to integers
+                                        slots = parse_to_integer(word)
+
+                                        if slots != 0 and total_slots == 0:
+                                            total_slots = slots
+
+                                        else:
+                                            pass
+
+                                    # if a slot total was included, randomly determines a winner from the slot range
+                                    if total_slots != 0:
+
+                                        winner = random.randint(0, total_slots)
+
+                                        comment_msg = "Thank you for hosting a raffle on /r/%s with %d slots.\n\nThe winner of the raffle is the redditor who chose raffle slot number %d!\n\n\n&nbsp;\n\n\n[^^Contact ^^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^^| [^^Source ^^Code](https://github.com/uberfastman/knifeswap-raffle-bot)" % (str(subreddit), total_slots, winner)
+
+                                        # logging.info("Raffle was drawn for comment at %s" % comment_link)
+                                        print "Raffle was drawn for comment at %s" % comment_link
+
+                                    else:
+                                        comment_msg = "No number of slots for the raffle was specified. Please try again.\n\n\n&nbsp;\n\n\n[^^Contact ^^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^^| [^^Source ^^Code](https://github.com/uberfastman/knifeswap-raffle-bot)"
+
+                                        # logging.info("Raffle was attempted but needed slot number for comment at %s" % comment_link)
+                                        print "Raffle was attempted but needed slot number for comment at %s" % comment_link
+
+                                    comment.reply(comment_msg)
+
+                                # warns comment poster that they cannot call for a raffle drawing if they are not the original submission poster
                                 else:
-                                    pass
+                                    comment_msg = "You are ***NOT*** the submitter of this raffle. You do ***NOT*** have permission to do the raffle drawing.\n\n\n&nbsp;\n\n\n[^^Contact ^^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^^| [^^Source ^^Code](https://github.com/uberfastman/knifeswap-raffle-bot)"
 
-                            # if a slot total was included, randomly determines a winner from the slot range
-                            if total_slots != 0:
+                                    # logging.info("Raffle drawing call was made by incorrect user for comment %s" % comment_link)
+                                    print "Raffle drawing call was made by incorrect user for comment %s" % comment_link
 
-                                winner = random.randint(0, total_slots)
+                                    comment.reply(comment_msg)
 
-                                comment_msg = "Thank you for hosting a raffle on /r/%s with %d slots.\n\nThe winner of the raffle is the redditor who chose raffle slot number %d!\n\n\n&nbsp;\n\n\n[^^Contact ^^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^^| [^^Source ^^Code](https://github.com/uberfastman/knifeswap-raffle-bot)" % (str(subreddit), total_slots, winner)
+                            already_parsed_comments.append(comment_id)
 
-                                # logging.info("Raffle was drawn for comment at %s" % comment_link)
-                                print "Raffle was drawn for comment at %s" % comment_link
+                    except Exception as e:
+                        private_message = "ERROR: %s (line %s) for post %s" % (e, sys.exc_info()[-1].tb_lineno, comment_link)
+                        exception_list.append(private_message)
 
-                            else:
-                                comment_msg = "No number of slots for the raffle was specified. Please try again.\n\n\n&nbsp;\n\n\n[^^Contact ^^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^^| [^^Source ^^Code](https://github.com/uberfastman/knifeswap-raffle-bot)"
+                        print "ERROR: %s (line %s) for post %s" % (e, sys.exc_info()[-1].tb_lineno, comment_link)
+                        pass
 
-                                # logging.info("Raffle was attempted but needed slot number for comment at %s" % comment_link)
-                                print "Raffle was attempted but needed slot number for comment at %s" % comment_link
+                if already_replied_list:
+                    print "/u/KNIFESWAP_RAFFLE_BOT already commented on comments with IDs %s in submission with ID '%s'." % (str(already_replied_list), submission_id)
 
-                            comment.reply(comment_msg)
+            except Exception as e:
+                private_message = "ERROR: %s (line %s) for post %s" % (e, sys.exc_info()[-1].tb_lineno, submission_link)
+                exception_list.append(private_message)
 
-                        # warns comment poster that they cannot call for a raffle drawing if they are not the original submission poster
-                        else:
-                            comment_msg = "You are ***NOT*** the submitter of this raffle. You do ***NOT*** have permission to do the raffle drawing.\n\n\n&nbsp;\n\n\n[^^Contact ^^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^^| [^^Source ^^Code](https://github.com/uberfastman/knifeswap-raffle-bot)"
-
-                            # logging.info("Raffle drawing call was made by incorrect user for comment %s" % comment_link)
-                            print "Raffle drawing call was made by incorrect user for comment %s" % comment_link
-
-                            comment.reply(comment_msg)
-
-                    # with open("saved_parsed_comments.txt", "a") as parse_history:
-                    #     parse_history.write(comment_id + "\n")
-
-                    already_parsed_comments.append(comment_id)
-            if already_replied_list:
-                print "/u/KNIFESWAP_RAFFLE_BOT already commented on comments with IDs %s in submission with ID '%s'." % (str(already_replied_list), submission_id)
+                print "ERROR: %s (line %s) for post %s" % (e, sys.exc_info()[-1].tb_lineno, submission_link)
+                pass
 
         current_time = datetime.datetime.now() - datetime.timedelta(hours=4)
 
-        # logging.info("The loop parsing new posts in /r/%s last executed at %s and took %s to run" % (str(subreddit), str(current_time), str(current_time - start_time)))
         print "The loop parsing new posts in /r/%s last executed at %s and took %s to run" % (str(subreddit), str(current_time), str(current_time - start_time))
 
-    # catches any exceptions and sends /u/uberfastman a private message with the error
     except Exception as e:
         private_message = "ERROR: %s (line %s)" % (e, sys.exc_info()[-1].tb_lineno)
-        r.send_message("uberfastman", "KNIFESWAP RAFFLE BOT ERROR!", private_message)
+        exception_list.append(private_message)
 
-        # logging.error("KNIFESWAP_RAFFLE_BOT encountered error: %s (line %s)" % (e, sys.exc_info()[-1].tb_lineno))
         print "ERROR: %s (line %s)" % (e, sys.exc_info()[-1].tb_lineno)
         pass
+
+    # catches any exceptions and sends /u/uberfastman a private message with the error
+    if exception_list:
+
+        message_string = '\n'.join(map(str, exception_list))
+
+        r.send_message("uberfastman", "KNIFESWAP RAFFLE BOT ERROR!", message_string)
 
     # time_check = datetime.datetime.now() - datetime.timedelta(hours=4)
     # midnight = time_check.replace(hour=0, minute=0, second=0, microsecond=0)
