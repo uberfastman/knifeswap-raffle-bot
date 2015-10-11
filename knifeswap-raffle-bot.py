@@ -128,13 +128,17 @@ while True:
 
                                         comment_msg = "Thank you for hosting a raffle on /r/%s with %d slots.\n\nThe winner of the raffle is the redditor who chose raffle slot number %d!\n\n\n&nbsp;\n\n\n[^^Contact ^^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^^| [^^Source ^^Code](https://github.com/uberfastman/knifeswap-raffle-bot)" % (str(subreddit), total_slots, winner)
 
-                                        # logging.info("Raffle was drawn for comment at %s" % comment_link)
+                                        message_string = "A successful raffle was drawn for submission %s from comment %s with a winning number of %d!" % (submission_link, comment_link, winner)
+                                        r.send_message("uberfastman", "SUCCESSFUL RAFFLE!", message_string)
+
                                         print "Raffle was drawn for comment at %s" % comment_link
 
                                     else:
                                         comment_msg = "No number of slots for the raffle was specified. Please try again.\n\n\n&nbsp;\n\n\n[^^Contact ^^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^^| [^^Source ^^Code](https://github.com/uberfastman/knifeswap-raffle-bot)"
 
-                                        # logging.info("Raffle was attempted but needed slot number for comment at %s" % comment_link)
+                                        message_string = "A raffle was attempted without included slots for submission %s from comment %s." % (submission_link, comment_link)
+                                        r.send_message("uberfastman", "UNSUCCESSFUL RAFFLE ATTEMPT!", message_string)
+
                                         print "Raffle was attempted but needed slot number for comment at %s" % comment_link
 
                                     comment.reply(comment_msg)
@@ -143,7 +147,9 @@ while True:
                                 else:
                                     comment_msg = "You are ***NOT*** the submitter of this raffle. You do ***NOT*** have permission to do the raffle drawing.\n\n\n&nbsp;\n\n\n[^^Contact ^^Creator](https://www.reddit.com/message/compose/?to=uberfastman) ^^| [^^Source ^^Code](https://github.com/uberfastman/knifeswap-raffle-bot)"
 
-                                    # logging.info("Raffle drawing call was made by incorrect user for comment %s" % comment_link)
+                                    message_string = "An unauthorized raffle call was made in submission %s by user %s in comment %s." % (submission_link, comment_author, comment_link)
+                                    r.send_message("uberfastman", "UNAUTHORIZED RAFFLE DRAWING CALL!", message_string)
+
                                     print "Raffle drawing call was made by incorrect user for comment %s" % comment_link
 
                                     comment.reply(comment_msg)
@@ -154,7 +160,7 @@ while True:
                         private_message = "ERROR: %s (line %s) for post %s" % (e, sys.exc_info()[-1].tb_lineno, comment_link)
                         exception_list.append(private_message)
 
-                        print "ERROR: %s (line %s) for post %s" % (e, sys.exc_info()[-1].tb_lineno, comment_link)
+                        print private_message
                         pass
 
                 if already_replied_list:
@@ -164,7 +170,7 @@ while True:
                 private_message = "ERROR: %s (line %s) for post %s" % (e, sys.exc_info()[-1].tb_lineno, submission_link)
                 exception_list.append(private_message)
 
-                print "ERROR: %s (line %s) for post %s" % (e, sys.exc_info()[-1].tb_lineno, submission_link)
+                print private_message
                 pass
 
         current_time = datetime.datetime.now() - datetime.timedelta(hours=4)
@@ -175,10 +181,10 @@ while True:
         private_message = "ERROR: %s (line %s)" % (e, sys.exc_info()[-1].tb_lineno)
         exception_list.append(private_message)
 
-        print "ERROR: %s (line %s)" % (e, sys.exc_info()[-1].tb_lineno)
+        print private_message
         pass
 
-    # catches any exceptions and sends /u/uberfastman a private message with the error
+    # catches any exceptions and sends /u/uberfastman a private message with the errors
     if exception_list:
 
         message_string = '\n'.join(map(str, exception_list))
