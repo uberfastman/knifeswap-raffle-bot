@@ -6,6 +6,7 @@ import random
 import os
 import datetime
 import sys
+import unicodedata
 
 print "STARTING KNIFESWAP-RAFFLE-BOT..."
 
@@ -18,6 +19,7 @@ subreddit = r.get_subreddit("knife_swap")
 python_mod_list = [str(mod) for mod in r.get_moderators(subreddit)]
 
 already_parsed_comments = []
+
 
 def parse_to_integer(string):
 
@@ -44,7 +46,8 @@ while True:
         # limit: controls number of new comments retrieved
         for submission in subreddit.get_new(limit=50):
 
-            submission_link = unicode(submission.permalink).encode("utf-8")
+            # sets the submission permalink
+            submission_link = unicodedata.normalize('NFKD', submission.permalink).encode('ascii', 'ignore')
 
             try:
 
@@ -53,9 +56,6 @@ while True:
 
                 # sets the original poster of the submission
                 submission_author = str(submission.author)
-
-                # sets the submission permalink
-                #submission_link = submission.permalink
 
                 # limit: take no more than this # of requests; threshold: requests must result in this many additional comments
                 submission.replace_more_comments(limit=None, threshold=1)
