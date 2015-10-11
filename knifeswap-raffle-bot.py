@@ -11,6 +11,9 @@ import unicodedata
 print "STARTING KNIFESWAP-RAFFLE-BOT..."
 
 r = praw.Reddit(user_agent="knifeswap_raffle_automator 1.0 by /u/uberfastman")
+
+# r.set_oauth_app_info(client_id="CLIENT_ID", client_secret="CLIENT_SECRET", redirect_uri="http://127.0.0.1:65010/authorize_callback")
+
 r.login(os.environ["REDDIT_USER"], os.environ["REDDIT_PASS"])
 
 subreddit = r.get_subreddit("knife_swap")
