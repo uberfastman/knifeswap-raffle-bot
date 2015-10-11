@@ -44,8 +44,7 @@ while True:
         # limit: controls number of new comments retrieved
         for submission in subreddit.get_new(limit=50):
 
-            # sets the submission permalink
-            submission_link = submission.permalink
+            submission_link = unicode(submission.permalink).encode("utf-8")
 
             try:
 
@@ -54,6 +53,9 @@ while True:
 
                 # sets the original poster of the submission
                 submission_author = str(submission.author)
+
+                # sets the submission permalink
+                #submission_link = submission.permalink
 
                 # limit: take no more than this # of requests; threshold: requests must result in this many additional comments
                 submission.replace_more_comments(limit=None, threshold=1)
