@@ -45,7 +45,7 @@ while True:
         for submission in subreddit.get_new(limit=50):
 
             # sets the submission permalink
-            submission_link = str(submission.permalink)
+            submission_link = submission.permalink
 
             try:
 
