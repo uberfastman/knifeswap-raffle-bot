@@ -80,7 +80,7 @@ while True:
 
                 for comment in flat_comments:
 
-                    comment_link = str(comment.permalink)
+                    comment_link = unicodedata.normalize('NFKD', comment.permalink).encode('ascii', 'ignore')
 
                     try:
 
